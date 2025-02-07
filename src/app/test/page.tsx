@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
 
@@ -252,12 +253,12 @@ function MainComponent() {
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
-                        <a
-                            href="/clientdash"
+                        <Link
+                            href={'/'}
                             className="bg-[#4339ca] hover:bg-[#4339ca]/80 px-6 py-2 rounded-xl transition-all text-white"
                         >
                             Back to Dashboard
-                        </a>
+                        </Link>
                         <h1 className="text-4xl font-light text-white">
                             Generate Job Specification
                         </h1>
@@ -268,12 +269,11 @@ function MainComponent() {
                     <div className="bg-white/10 rounded-2xl p-6 h-[calc(100vh-12rem)] border-2 border-[#4339ca]">
                         <div className="flex flex-col h-full">
                             <div className="flex-1 overflow-y-auto mb-6 space-y-4">
-                                {messages.map((message, index) => (
+                                {messages.map((message: any, index: any) => (
                                     <div
                                         key={index}
                                         className={`flex ${message.role === "user" ? "justify-end" : "justify-start"
-                                            }`}
-                                    >
+                                            }`}>
                                         <div
                                             className={`max-w-[70%] p-4 rounded-xl ${message.role === "user" ? "bg-[#4339ca]" : "bg-white/10"
                                                 } text-white`}
@@ -351,7 +351,7 @@ function MainComponent() {
                                                     }))
                                                 }
                                                 placeholder="Title"
-                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white"
+                                                className="w-full bg-[#00E5FF]/20 px-4 placeholder-slate-100 py-2 rounded-xl text-white"
                                                 name="title"
                                             />
                                             <input
@@ -364,7 +364,7 @@ function MainComponent() {
                                                     }))
                                                 }
                                                 placeholder="Company"
-                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white"
+                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 placeholder-slate-100 rounded-xl text-white"
                                                 name="company"
                                             />
                                             <input
@@ -377,7 +377,7 @@ function MainComponent() {
                                                     }))
                                                 }
                                                 placeholder="Location"
-                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white"
+                                                className="w-full bg-[#00E5FF]/20 placeholder-slate-100 px-4 py-2 rounded-xl text-white"
                                                 name="location"
                                             />
                                             <input
@@ -390,7 +390,7 @@ function MainComponent() {
                                                     }))
                                                 }
                                                 placeholder="Type"
-                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white"
+                                                className="w-full bg-[#00E5FF]/20 placeholder-slate-100 px-4 py-2 rounded-xl text-white"
                                                 name="type"
                                             />
                                             <input
@@ -403,7 +403,7 @@ function MainComponent() {
                                                     }))
                                                 }
                                                 placeholder="Salary"
-                                                className="w-full bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white"
+                                                className="w-full bg-[#00E5FF]/20 placeholder-slate-100 px-4 py-2 rounded-xl text-white"
                                                 name="salary"
                                             />
                                             {jobSpec.customFields?.map((field, index) => (
@@ -412,7 +412,7 @@ function MainComponent() {
                                                         type="text"
                                                         value={field.label}
                                                         onChange={(e) =>
-                                                            setJobSpec((prev) => ({
+                                                            setJobSpec((prev: any) => ({
                                                                 ...prev,
                                                                 customFields: prev.customFields.map((f, i) =>
                                                                     i === index
@@ -470,7 +470,7 @@ function MainComponent() {
                                                 }))
                                             }
                                             placeholder="Enter job summary..."
-                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white resize-none"
+                                            className="w-full h-32 bg-[#00E5FF]/20 placeholder-slate-100 px-4 py-2 rounded-xl text-white resize-none"
                                             name="summary"
                                         />
                                     </div>
@@ -485,7 +485,7 @@ function MainComponent() {
                                                 }))
                                             }
                                             placeholder="Enter responsibilities (one per line)..."
-                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white resize-none"
+                                            className="w-full h-32 bg-[#00E5FF]/20 placeholder-slate-100 px-4 py-2 rounded-xl text-white resize-none"
                                             name="responsibilities"
                                         />
                                     </div>
@@ -500,7 +500,7 @@ function MainComponent() {
                                                 }))
                                             }
                                             placeholder="Enter requirements (one per line)..."
-                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white resize-none"
+                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 placeholder-slate-100 rounded-xl text-white resize-none"
                                             name="requirements"
                                         />
                                     </div>
@@ -515,7 +515,7 @@ function MainComponent() {
                                                 }))
                                             }
                                             placeholder="Enter benefits (one per line)..."
-                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white resize-none"
+                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 placeholder-slate-100 rounded-xl text-white resize-none"
                                             name="benefits"
                                         />
                                     </div>
@@ -524,13 +524,13 @@ function MainComponent() {
                                         <textarea
                                             value={jobSpec.miscellaneous?.join("\n") || ""}
                                             onChange={(e) =>
-                                                setJobSpec((prev) => ({
+                                                setJobSpec((prev: any) => ({
                                                     ...prev,
                                                     miscellaneous: e.target.value.split("\n"),
                                                 }))
                                             }
                                             placeholder="Enter any additional information (one per line)..."
-                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 rounded-xl text-white resize-none"
+                                            className="w-full h-32 bg-[#00E5FF]/20 px-4 py-2 placeholder-slate-100 rounded-xl text-white resize-none"
                                             name="miscellaneous"
                                         />
                                     </div>
