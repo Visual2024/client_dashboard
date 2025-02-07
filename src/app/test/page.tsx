@@ -2,15 +2,34 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
+interface Message {
+    role: "user" | "assistant";
+    content: string;
+}
+
+type JobSpec = {
+    title: string;
+    company: string;
+    location: string;
+    type: string;
+    salary: string;
+    summary: string;
+    responsibilities: string[];
+    requirements: string[];
+    benefits: string[];
+    customFields: { label: string; value: string; }[];
+    miscellaneous: string[];
+    [key: string]: unknown;
+};
 
 
 function MainComponent() {
-    const [messages, setMessages] = useState<any>([]);
-    const [inputValue, setInputValue] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [showPreview, setShowPreview] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [jobSpec, setJobSpec] = useState({
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [inputValue, setInputValue] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showPreview, setShowPreview] = useState<boolean>(false);
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const [jobSpec, setJobSpec] = useState<JobSpec>({
         title: "",
         company: "",
         location: "",
@@ -22,6 +41,7 @@ function MainComponent() {
         benefits: [],
         customFields: [],
         miscellaneous: [],
+        key: "",
     });
     const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +49,7 @@ function MainComponent() {
         setMessages([{
             role: "assistant",
             content: "Hi! I'll help you write a job spec. Just type a job title to get started. I'll ask for any additional details I need about the location and industry."
-        }])
+        }]);
     }, []);
 
     useEffect(() => {
@@ -41,13 +61,9 @@ function MainComponent() {
 
         try {
             setLoading(true);
-            const userMessage = { role: "user", content: inputValue };
-            setMessages((prev: any) => [...prev, userMessage]);
+            const userMessage: Message = { role: "user", content: inputValue };
+            setMessages((prev) => [...prev, userMessage]);
             setInputValue("");
-
-            let marketData = [];
-            let locationData = [];
-            let industryData = [];
 
             const response = await fetch("/integrations/chat-gpt/conversationgpt4", {
                 method: "POST",
@@ -84,19 +100,19 @@ function MainComponent() {
 
             try {
                 const conversationMatch = botResponse.match(
-                    /\[CONVERSATION\](.*?)\[\/CONVERSATION\]/s
+                    /\[CONVERSATION\](.*?)\[\/CONVERSATION\]/
                 );
                 const specMatch = botResponse.match(
-                    /\[SPEC_UPDATE\](.*?)\[\/SPEC_UPDATE\]/s
+                    /\[SPEC_UPDATE\](.*?)\[\/SPEC_UPDATE\]/
                 );
 
                 if (specMatch || conversationMatch) {
                     const specUpdate = specMatch ? JSON.parse(specMatch[1].trim()) : {};
                     setJobSpec((prev) => {
-                        const newSpec = { ...prev };
-                        Object.keys(specUpdate).forEach((key) => {
-                            if (Array.isArray(specUpdate[key])) {
-                                newSpec[key] = [...new Set([...prev[key], ...specUpdate[key]])];
+                        const newSpec: JobSpec = { ...prev };
+                        Object.keys(specUpdate).forEach((key: string) => {
+                            if (Array.isArray(specUpdate[key] as unknown)) {
+                                newSpec[key] = [...new Set([...prev[key] as unknown as string[], ...(specUpdate[key] as unknown as string[])])];
                             } else if (specUpdate[key]) {
                                 if (
                                     key === "salary" &&
@@ -128,8 +144,8 @@ function MainComponent() {
                                     if (totalIncrease > 0) {
                                         const [min, max] = salary
                                             .split("-")
-                                            .map((s) => parseInt(s.replace(/[^0-9]/g, "")));
-                                        const adjustedMin = Math.round(
+                                            .map((s: string) => parseInt(s.replace(/[^0-9]/g, "")));
+                                        const adjustedMin: number = Math.round(
                                             min * (1 + totalIncrease / 100)
                                         );
                                         const adjustedMax = Math.round(
@@ -178,6 +194,7 @@ function MainComponent() {
                     content: "I'm having trouble right now. Could you try again?",
                 },
             ]);
+            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -240,7 +257,7 @@ function MainComponent() {
                 ...prev,
                 {
                     role: "assistant",
-                    content: `❌ ${error.message}. Please try again.`,
+                    content: `❌ ${(error as Error).message}. Please try again.`,
                 },
             ]);
         } finally {
@@ -269,7 +286,7 @@ function MainComponent() {
                     <div className="bg-white/10 rounded-2xl p-6 h-[calc(100vh-12rem)] border-2 border-[#4339ca]">
                         <div className="flex flex-col h-full">
                             <div className="flex-1 overflow-y-auto mb-6 space-y-4">
-                                {messages.map((message: any, index: any) => (
+                                {messages.map((message, index) => (
                                     <div
                                         key={index}
                                         className={`flex ${message.role === "user" ? "justify-end" : "justify-start"
@@ -412,7 +429,7 @@ function MainComponent() {
                                                         type="text"
                                                         value={field.label}
                                                         onChange={(e) =>
-                                                            setJobSpec((prev: any) => ({
+                                                            setJobSpec((prev) => ({
                                                                 ...prev,
                                                                 customFields: prev.customFields.map((f, i) =>
                                                                     i === index
@@ -429,7 +446,7 @@ function MainComponent() {
                                                         type="text"
                                                         value={field.value}
                                                         onChange={(e) =>
-                                                            setJobSpec((prev: any) => ({
+                                                            setJobSpec((prev) => ({
                                                                 ...prev,
                                                                 customFields: prev.customFields.map((f, i) =>
                                                                     i === index
@@ -479,7 +496,7 @@ function MainComponent() {
                                         <textarea
                                             value={jobSpec.responsibilities.join("\n")}
                                             onChange={(e) =>
-                                                setJobSpec((prev: any) => ({
+                                                setJobSpec((prev) => ({
                                                     ...prev,
                                                     responsibilities: e.target.value.split("\n"),
                                                 }))
@@ -494,7 +511,7 @@ function MainComponent() {
                                         <textarea
                                             value={jobSpec.requirements.join("\n")}
                                             onChange={(e) =>
-                                                setJobSpec((prev: any) => ({
+                                                setJobSpec((prev) => ({
                                                     ...prev,
                                                     requirements: e.target.value.split("\n"),
                                                 }))
@@ -509,7 +526,7 @@ function MainComponent() {
                                         <textarea
                                             value={jobSpec.benefits.join("\n")}
                                             onChange={(e) =>
-                                                setJobSpec((prev: any) => ({
+                                                setJobSpec((prev) => ({
                                                     ...prev,
                                                     benefits: e.target.value.split("\n"),
                                                 }))
@@ -524,7 +541,7 @@ function MainComponent() {
                                         <textarea
                                             value={jobSpec.miscellaneous?.join("\n") || ""}
                                             onChange={(e) =>
-                                                setJobSpec((prev: any) => ({
+                                                setJobSpec((prev) => ({
                                                     ...prev,
                                                     miscellaneous: e.target.value.split("\n"),
                                                 }))

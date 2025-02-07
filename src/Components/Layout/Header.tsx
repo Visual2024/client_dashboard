@@ -1,5 +1,5 @@
 import { NavIcon } from '@/Icons/NavIcon';
-import {Briefcase, Users, MessageCircle, Calendar, Settings, PlusCircle, ListOrdered, Home } from 'lucide-react';
+import {Briefcase, Users, MessageCircle, Calendar, Settings, Home } from 'lucide-react';
 
 export function Header() {
     return (
