@@ -1,32 +1,8 @@
 "use client";
+import { Candidate, Job } from "@/Types/interfaces";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
-interface Job {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  salary: string;
-  status: string;
-  description: string;
-  requirements: string[];
-  responsibilities: string[];
-  benefits: string[];
-  posted_date: Date;
-}
-
-interface Candidate {
-  id: number;
-  name: string;
-  location: string;
-  salary: string;
-  skills: string;
-  match_score?: number;
-  match_reason?: string;
-  title: string;  
-}
 
 function MainComponent() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -51,7 +27,7 @@ function MainComponent() {
       const response = await fetch("../../json/jobs.json", {
         method: "POST",
         body: JSON.stringify({
-          query: "SELECT * FROM job_specs ORDER BY posted_date DESC",
+          query: "",
           values: [],
         }),
       });

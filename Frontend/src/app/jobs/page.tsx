@@ -1,26 +1,7 @@
 "use client";
+import { JobSpec, Message } from "@/Types/interfaces";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-
-interface Message {
-    role: "user" | "assistant";
-    content: string;
-}
-
-type JobSpec = {
-    title: string;
-    company: string;
-    location: string;
-    type: string;
-    salary: string;
-    summary: string;
-    responsibilities: string[];
-    requirements: string[];
-    benefits: string[];
-    customFields: { label: string; value: string; }[];
-    miscellaneous: string[];
-    [key: string]: unknown;
-};
 
 
 function MainComponent() {

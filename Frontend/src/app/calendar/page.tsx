@@ -1,26 +1,9 @@
 "use client";
+import { Header } from "@/Components/Layout/Header";
+import { DragInfo, Interview } from "@/Types/interfaces";
 import Link from "next/link";
 import React, { useState } from "react";
 
-interface Interview {
-    id: number;
-    company: string;
-    role: string;
-    date: string;
-    time: string;
-    duration: string;
-    type: string;
-    interviewer: string;
-    status: string;
-    meetingLink: string;
-    notes: string;
-    logo: string;
-}
-
-interface DragInfo {
-    date: Date;
-    time: string;
-}
 
 function MainComponent() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -215,42 +198,8 @@ function MainComponent() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#ff6b6b] to-[#ff8585]">
-            <div className="fixed top-0 left-0 right-0 z-50 bg-[#ff6b6b]">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex justify-center items-center h-16 gap-4">
-                        <Link href="/" className="text-white flex items-center gap-2">
-                            <i className="fas fa-home text-xl"></i>
-                            <span>Home</span>
-                        </Link>
-                        <Link
-                            href="/livejobs"
-                            className="text-white/80 hover:text-white flex items-center gap-2"
-                        >
-                            <i className="fas fa-briefcase text-xl"></i>
-                            <span>Jobs</span>
-                        </Link>
-                        <Link
-                            href="/messenger"
-                            className="text-white/80 hover:text-white flex items-center gap-2"
-                        >
-                            <i className="fas fa-comments text-xl"></i>
-                            <span>Messages</span>
-                        </Link>
-                        <div className="text-white/30 flex items-center gap-2 cursor-not-allowed">
-                            <i className="fas fa-calendar text-xl"></i>
-                            <span>Calendar</span>
-                        </div>
-                        <Link
-                            href="/settings"
-                            className="text-white/80 hover:text-white flex items-center gap-2"
-                        >
-                            <i className="fas fa-cog text-xl"></i>
-                            <span>Settings</span>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-            <div className="pt-24 px-8 pb-8">
+            <Header />
+            <div className="pt-10 px-8 pb-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl text-white font-light">
@@ -425,8 +374,8 @@ function MainComponent() {
                                         key={type}
                                         onClick={() => setSelectedInterviewType(type)}
                                         className={`flex-1 px-4 py-2 rounded-xl text-white capitalize ${selectedInterviewType === type
-                                                ? "bg-[#ff6b6b]"
-                                                : "hover:bg-white/10"
+                                            ? "bg-[#ff6b6b]"
+                                            : "hover:bg-white/10"
                                             }`}
                                     >
                                         {type}
@@ -484,8 +433,8 @@ function MainComponent() {
                                                                 }
                                                             }}
                                                             className={`w-full h-10 border border-white/10 ${availability[timeSlot]
-                                                                    ? "bg-[#ff6b6b]"
-                                                                    : "hover:bg-white/10"
+                                                                ? "bg-[#ff6b6b]"
+                                                                : "hover:bg-white/10"
                                                                 }`}
                                                         />
                                                     );
