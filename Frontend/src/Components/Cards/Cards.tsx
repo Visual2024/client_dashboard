@@ -12,19 +12,19 @@ export function Cards() {
                     Icon={PlusCircle}
                     title="Post a Job"
                     description="Create a new job posting"
-                    link="/test"
+                    link="/jobs"
                 />
                 <Elements_Card
                     Icon={ListOrdered}
                     title="Manage Jobs"
                     description="View and manage your job postings"
-                    link=""
+                    link="/manager"
                 />
                 <Elements_Card
                     Icon={Calendar}
                     title="Interview Schedule"
                     description="Manage your upcoming interviews and schedule"
-                    link=""
+                    link="/calendar"
                 />
                 <Elements_Card
                     Icon={MessageCircle}

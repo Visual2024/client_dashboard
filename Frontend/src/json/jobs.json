@@ -1,0 +1,26 @@
+{
+    "id": 1,
+    "title": "Desarrollador de Software",
+    "company": "TechCorp",
+    "location": "Remoto",
+    "type": "Tiempo completo",
+    "salary": "$60,000 - $80,000 al año",
+    "status": "Abierto",
+    "description": "Estamos buscando un desarrollador de software con experiencia en TypeScript y Node.js para unirse a nuestro equipo.",
+    "requirements": [
+      "Experiencia en TypeScript y Node.js",
+      "Conocimientos en bases de datos SQL y NoSQL",
+      "Experiencia con Git y metodologías ágiles"
+    ],
+    "responsibilities": [
+      "Desarrollar y mantener aplicaciones web",
+      "Colaborar con el equipo de diseño para implementar interfaces de usuario",
+      "Escribir código limpio, escalable y bien documentado"
+    ],
+    "benefits": [
+      "Seguro médico",
+      "Horarios flexibles",
+      "Oportunidades de crecimiento profesional"
+    ],
+    "posted_date": "2023-10-01T00:00:00.000Z"
+  }
