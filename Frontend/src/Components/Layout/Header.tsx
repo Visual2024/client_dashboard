@@ -2,11 +2,6 @@ import { NavIcon } from '@/Icons/NavIcon';
 import { Briefcase, Users, MessageCircle, Calendar, Settings, Home } from 'lucide-react';
 import Link from 'next/link';
 
-interface NavItem {
-    Icon: React.ComponentType<any>;
-    link: string;
-}
-
 export function Header() {
     const navItems: NavItem[] = [
         { Icon: Home, link: '/' },
@@ -18,7 +13,7 @@ export function Header() {
     ];
 
     interface NavItem {
-        Icon: React.ComponentType<any>;
+        Icon: React.ComponentType;
         link: string;
     }
 
