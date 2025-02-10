@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
 interface Job {
@@ -34,8 +35,8 @@ function MainComponent() {
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showCandidatesOverlay, setShowCandidatesOverlay] = useState<boolean>(false);
-  const [rankedCandidates, setRankedCandidates] = useState<Candidate[]>([]);
-  const [loadingCandidates, setLoadingCandidates] = useState<boolean>(false);
+  const [rankedCandidates] = useState<Candidate[]>([]);
+  const [loadingCandidates] = useState<boolean>(false);
   const [now, setNow] = useState<Date>(new Date());
 
   useEffect(() => {
@@ -158,95 +159,95 @@ function MainComponent() {
     }
   };
 
-  const handleViewCandidates = async (job: Job) => {
-    setSelectedJob(job);
-    setLoadingCandidates(true);
-    setShowCandidatesOverlay(true);
+  // const handleViewCandidates = async (job: Job) => {
+  //   setSelectedJob(job);
+  //   setLoadingCandidates(true);
+  //   setShowCandidatesOverlay(true);
 
-    try {
-      const candidatesResponse = await fetch("/api/db/treasurycandy", {
-        method: "POST",
-        body: JSON.stringify({
-          query: "SELECT * FROM treasurycandy",
-          values: [],
-        }),
-      });
-      const candidates: Candidate[] = await candidatesResponse.json();
+  //   try {
+  //     const candidatesResponse = await fetch("/api/db/treasurycandy", {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         query: "SELECT * FROM treasurycandy",
+  //         values: [],
+  //       }),
+  //     });
+  //     const candidates: Candidate[] = await candidatesResponse.json();
 
-      const rankedResults = candidates.map((candidate) => {
-        let score = 0;
-        let matchReason: string[] = [];
+  //     const rankedResults = candidates.map((candidate) => {
+  //       let score = 0;
+  //       let matchReason: string[] = [];
 
-        if (candidate.location?.toLowerCase().includes(job.location?.toLowerCase())) {
-          score += 30;
-          matchReason.push("Location match");
-        }
+  //       if (candidate.location?.toLowerCase().includes(job.location?.toLowerCase())) {
+  //         score += 30;
+  //         matchReason.push("Location match");
+  //       }
 
-        const jobSalary = parseInt(job.salary?.replace(/[^0-9]/g, "")) || 0;
-        const candidateSalary = parseInt(candidate.salary?.replace(/[^0-9]/g, "")) || 0;
+  //       const jobSalary = parseInt(job.salary?.replace(/[^0-9]/g, "")) || 0;
+  //       const candidateSalary = parseInt(candidate.salary?.replace(/[^0-9]/g, "")) || 0;
 
-        if (Math.abs(jobSalary - candidateSalary) < 10000) {
-          score += 25;
-          matchReason.push("Salary expectations align");
-        }
+  //       if (Math.abs(jobSalary - candidateSalary) < 10000) {
+  //         score += 25;
+  //         matchReason.push("Salary expectations align");
+  //       }
 
-        const jobSkills = job.requirements?.join(" ").toLowerCase() || "";
-        const candidateSkills = candidate.skills?.toLowerCase() || "";
+  //       const jobSkills = job.requirements?.join(" ").toLowerCase() || "";
+  //       const candidateSkills = candidate.skills?.toLowerCase() || "";
 
-        const skillsMatch = candidateSkills.split(",").filter((skill) => jobSkills.includes(skill.trim())).length;
+  //       const skillsMatch = candidateSkills.split(",").filter((skill) => jobSkills.includes(skill.trim())).length;
 
-        if (skillsMatch > 0) {
-          score += Math.min(skillsMatch * 15, 45);
-          matchReason.push(`${skillsMatch} key skills match`);
-        }
+  //       if (skillsMatch > 0) {
+  //         score += Math.min(skillsMatch * 15, 45);
+  //         matchReason.push(`${skillsMatch} key skills match`);
+  //       }
 
-        return { ...candidate, match_score: score, match_reason: matchReason.join(", ") };
-      }).sort((a, b) => b.match_score - a.match_score).slice(0, 3);
+  //       return { ...candidate, match_score: score, match_reason: matchReason.join(", ") };
+  //     }).sort((a, b) => b.match_score - a.match_score).slice(0, 3);
 
-      setRankedCandidates(rankedResults);
-    } catch (error) {
-      console.error("Error fetching candidates:", error);
-    } finally {
-      setLoadingCandidates(false);
-    }
-  };
+  //     setRankedCandidates(rankedResults);
+  //   } catch (error) {
+  //     console.error("Error fetching candidates:", error);
+  //   } finally {
+  //     setLoadingCandidates(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ff6b6b] to-[#ff8585]">
       <div className="bg-[#ff6b6b] shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-center h-16 gap-6">
-          <a
+          <Link
             href="/"
             className="flex flex-col items-center text-white/80 hover:text-white"
           >
             <i className="fas fa-home text-2xl"></i>
             <span className="text-sm mt-1">Home</span>
-          </a>
+          </Link>
           <div className="flex flex-col items-center text-white/30 cursor-not-allowed">
             <i className="fas fa-briefcase text-2xl"></i>
             <span className="text-sm mt-1">Jobs</span>
           </div>
-          <a
+          <Link
             href="/messenger"
             className="flex flex-col items-center text-white/80 hover:text-white"
           >
             <i className="fas fa-comments text-2xl"></i>
             <span className="text-sm mt-1">Messages</span>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/schedule"
             className="flex flex-col items-center text-white/80 hover:text-white"
           >
             <i className="fas fa-calendar text-2xl"></i>
             <span className="text-sm mt-1">Calendar</span>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/settings"
             className="flex flex-col items-center text-white/80 hover:text-white"
           >
             <i className="fas fa-cog text-2xl"></i>
             <span className="text-sm mt-1">Settings</span>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="px-8 pb-8 pt-8">
@@ -328,19 +329,19 @@ function MainComponent() {
                     >
                       View / Edit
                     </button>
-                    <a
+                    <Link
                       href="/top-rankedcandidates"
                       className="bg-[#ff858580] hover:bg-[#ff8585] text-white px-6 py-2 rounded-xl transition-all duration-300 text-center w-full"
                     >
                       Top Ranked Candidates
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="/shortlist"
                       className="bg-[#22c55e] hover:bg-[#22c55e]/80 text-white px-6 py-2 rounded-xl transition-all duration-300 text-center w-full"
                     >
                       <i className="fas fa-star mr-2"></i>
                       Shortlist
-                    </a>
+                    </Link>
                   </div>
                 </div>
               );
@@ -550,20 +551,20 @@ function MainComponent() {
                       {candidate.match_reason}
                     </p>
                     <div className="flex gap-4">
-                      <a
+                      <Link
                         href="/messenger"
                         className="flex-1 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-white text-center"
                       >
                         <i className="fas fa-comments mr-2"></i>
                         Contact
-                      </a>
-                      <a
+                      </Link>
+                      <Link
                         href="/camera"
                         className="flex-1 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-white text-center"
                       >
                         <i className="fas fa-video mr-2"></i>
                         Interview
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 ))}

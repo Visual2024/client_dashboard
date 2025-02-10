@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState } from "react";
 
 interface Interview {
@@ -167,6 +168,8 @@ function MainComponent() {
         setDragValue(!availability[timeSlot]);
     };
 
+    console.log(dragEnd)
+
     const handleDragMove = (date: Date, time: string) => {
         if (isDragging) {
             setDragEnd({ date, time });
@@ -197,7 +200,7 @@ function MainComponent() {
         const [earlierDate, laterDate] = startDate <= endDate ? [startDate, endDate] : [endDate, startDate];
         const [minIndex, maxIndex] = startIndex <= endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
 
-        let currentDate = new Date(earlierDate);
+        const currentDate = new Date(earlierDate);
         while (currentDate <= laterDate) {
             timeSlots.slice(minIndex, maxIndex + 1).forEach((time) => {
                 slots.push(`${currentDate.toISOString().split("T")[0]}-${time}`);
@@ -215,35 +218,35 @@ function MainComponent() {
             <div className="fixed top-0 left-0 right-0 z-50 bg-[#ff6b6b]">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex justify-center items-center h-16 gap-4">
-                        <a href="/" className="text-white flex items-center gap-2">
+                        <Link href="/" className="text-white flex items-center gap-2">
                             <i className="fas fa-home text-xl"></i>
                             <span>Home</span>
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/livejobs"
                             className="text-white/80 hover:text-white flex items-center gap-2"
                         >
                             <i className="fas fa-briefcase text-xl"></i>
                             <span>Jobs</span>
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/messenger"
                             className="text-white/80 hover:text-white flex items-center gap-2"
                         >
                             <i className="fas fa-comments text-xl"></i>
                             <span>Messages</span>
-                        </a>
+                        </Link>
                         <div className="text-white/30 flex items-center gap-2 cursor-not-allowed">
                             <i className="fas fa-calendar text-xl"></i>
                             <span>Calendar</span>
                         </div>
-                        <a
+                        <Link
                             href="/settings"
                             className="text-white/80 hover:text-white flex items-center gap-2"
                         >
                             <i className="fas fa-cog text-xl"></i>
                             <span>Settings</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -375,18 +378,18 @@ function MainComponent() {
                                             </div>
                                         </div>
                                         <div className="flex gap-4">
-                                            <a
+                                            <Link
                                                 href="/camera"
                                                 className="flex-1 bg-[#ff6b6b] hover:bg-[#ff8585] px-4 py-2 rounded-xl text-white text-center"
                                             >
                                                 Join Meeting
-                                            </a>
-                                            <a
+                                            </Link>
+                                            <Link
                                                 href="/pb-prepbot"
                                                 className="flex-1 bg-[#ff6b6b]/20 hover:bg-[#ff6b6b]/30 px-4 py-2 rounded-xl text-white text-center"
                                             >
                                                 Prepare with AI
-                                            </a>
+                                            </Link>
                                         </div>
                                     </div>
                                 ))}
