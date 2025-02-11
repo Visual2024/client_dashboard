@@ -1,4 +1,5 @@
 "use client";
+import { Header } from "@/Components/Layout/Header";
 import { JobSpec, Message } from "@/Types/interfaces";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
@@ -247,8 +248,9 @@ function MainComponent() {
     };
 
     return (
-        <div className="min-h-screen bg-[#ff6b6b] p-8 font-helvetica-neue font-bold">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#ff6b6b]  font-helvetica-neue font-bold">
+            <Header />
+            <div className="max-w-7xl mx-auto pt-10">
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
                         <Link

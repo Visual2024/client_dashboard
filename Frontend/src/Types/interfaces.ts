@@ -68,3 +68,36 @@ export interface DragInfo {
     date: Date;
     time: string;
 }
+
+// AuthContext
+
+export interface AuthTokens {
+    token: string;
+    email: string;
+    iat: number;
+    exp: number;
+    authorities: string[];
+}
+
+export interface tokenData {
+    fullName: string;
+    sub: string;
+    iat: number;
+    exp: number;
+    authorities: string[];
+}
+
+export interface AuthContextProps {
+    login: (email: string, password: string) => void;
+    logout: () => void;
+    isLoggedIn: boolean;
+    authTokens: AuthTokens | null;
+    register: (email: string, password: string, name: string, lastname: string) => void;
+    fetchJobs: VoidFunction;
+    handleDeleteJob: (jobId: number) => Promise<void>;
+}
+
+export interface AuthenticationRequest {
+    email: string;
+    password: string;
+}

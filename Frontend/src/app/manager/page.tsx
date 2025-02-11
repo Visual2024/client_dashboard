@@ -1,11 +1,12 @@
 "use client";
+import { useAuthContext } from "@/Context/AuthContext";
 import { Candidate, Job } from "@/Types/interfaces";
 import Link from "next/link";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState} from "react";
 
 
 function MainComponent() {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [editedJob, setEditedJob] = useState<Job | null>(null);
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
@@ -14,28 +15,14 @@ function MainComponent() {
   const [rankedCandidates] = useState<Candidate[]>([]);
   const [loadingCandidates] = useState<boolean>(false);
   const [now, setNow] = useState<Date>(new Date());
+  const { fetchJobs, handleDeleteJob } = useAuthContext();
+
 
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
     }, 1000 * 60);
     return () => clearInterval(interval);
-  }, []);
-
-  const fetchJobs = useCallback(async () => {
-    try {
-      const response = await fetch("../../json/jobs.json", {
-        method: "POST",
-        body: JSON.stringify({
-          query: "",
-          values: [],
-        }),
-      });
-      const data = await response.json();
-      setJobs(data);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    }
   }, []);
 
   useEffect(() => {
@@ -73,24 +60,7 @@ function MainComponent() {
     setShowOverlay(true);
   };
 
-  const handleDeleteJob = async (jobId: number) => {
-    try {
-      const response = await fetch("/api/db/newjobspecs", {
-        method: "POST",
-        body: JSON.stringify({
-          query: "DELETE FROM job_specs WHERE id = ?",
-          values: [jobId],
-        }),
-      });
-
-      if (response.ok) {
-        setJobs(jobs.filter((job) => job.id !== jobId));
-        setShowDeleteConfirm(null);
-      }
-    } catch (error) {
-      console.error("Error deleting job:", error);
-    }
-  };
+  
 
   const handleSaveJob = async () => {
     if (!editedJob) return;
