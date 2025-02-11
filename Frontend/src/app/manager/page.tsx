@@ -1,22 +1,21 @@
 "use client";
+import { Header } from "@/Components/Layout/Header";
 import { useAuthContext } from "@/Context/AuthContext";
 import { Candidate, Job } from "@/Types/interfaces";
 import Link from "next/link";
-import { useEffect, useState} from "react";
-
+import { useEffect, useState } from "react";
 
 function MainComponent() {
-  const [jobs] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [editedJob, setEditedJob] = useState<Job | null>(null);
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showCandidatesOverlay, setShowCandidatesOverlay] = useState<boolean>(false);
-  const [rankedCandidates] = useState<Candidate[]>([]);
-  const [loadingCandidates] = useState<boolean>(false);
+  const [rankedCandidates, setRankedCandidates] = useState<Candidate[]>([]);
+  const [loadingCandidates, setLoadingCandidates] = useState<boolean>(false);
   const [now, setNow] = useState<Date>(new Date());
-  const { fetchJobs, handleDeleteJob } = useAuthContext();
-
+  const { handleDeleteJob } = useAuthContext();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,8 +25,39 @@ function MainComponent() {
   }, []);
 
   useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+    // Simulación de carga de datos
+    const mockJobs: Job[] = [
+      {
+        id: 1,
+        title: "Software Engineer",
+        company: "Tech Corp",
+        location: "Remote",
+        type: "Full-time",
+        salary: "$100,000",
+        status: "Open",
+        description: "Develop and maintain software applications.",
+        requirements: JSON.parse('["JavaScript", "React", "Node.js"]') as string[],
+        responsibilities: ["Write code", "Review PRs"],
+        benefits: ["Health insurance", "401(k)"],
+        posted_date: "2023-10-01",
+      },
+      {
+        id: 2,
+        title: "Software Engineer",
+        company: "Tech Corp",
+        location: "Remote",
+        type: "Full-time",
+        salary: "$100,000",
+        status: "Open",
+        description: "Develop and maintain software applications.",
+        requirements: JSON.parse('["JavaScript", "React", "Node.js"]') as string[],
+        responsibilities: ["Write code", "Review PRs"],
+        benefits: ["Health insurance", "401(k)"],
+        posted_date: "2023-10-01",
+      },
+    ];
+    setJobs(mockJobs);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,142 +90,49 @@ function MainComponent() {
     setShowOverlay(true);
   };
 
-  
-
   const handleSaveJob = async () => {
     if (!editedJob) return;
     try {
-      const response = await fetch("/api/db/newjobspecs", {
-        method: "POST",
-        body: JSON.stringify({
-          query: `UPDATE job_specs SET 
-            title = ?, 
-            company = ?, 
-            location = ?, 
-            type = ?, 
-            salary = ?, 
-            status = ?,
-            description = ?,
-            requirements = ?,
-            responsibilities = ?,
-            benefits = ?
-            WHERE id = ?`,
-          values: [
-            editedJob.title,
-            editedJob.company,
-            editedJob.location,
-            editedJob.type,
-            editedJob.salary,
-            editedJob.status,
-            editedJob.description,
-            JSON.stringify(editedJob.requirements),
-            JSON.stringify(editedJob.responsibilities),
-            JSON.stringify(editedJob.benefits),
-            editedJob.id,
-          ],
-        }),
-      });
-
-      if (response.ok) {
-        await fetchJobs();
-        setShowOverlay(false);
-      }
+      // Simulación de guardado de datos
+      const updatedJobs = jobs.map(job => job.id === editedJob.id ? editedJob : job);
+      setJobs(updatedJobs);
+      setShowOverlay(false);
     } catch (error) {
       console.error("Error updating job:", error);
     }
   };
 
-  // const handleViewCandidates = async (job: Job) => {
-  //   setSelectedJob(job);
-  //   setLoadingCandidates(true);
-  //   setShowCandidatesOverlay(true);
+  const handleViewCandidates = async (job: Job) => {
+    setSelectedJob(job);
+    setLoadingCandidates(true);
+    setShowCandidatesOverlay(true);
 
-  //   try {
-  //     const candidatesResponse = await fetch("/api/db/treasurycandy", {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         query: "SELECT * FROM treasurycandy",
-  //         values: [],
-  //       }),
-  //     });
-  //     const candidates: Candidate[] = await candidatesResponse.json();
+    // Simulación de carga de candidatos
+    const mockCandidates: Candidate[] = [
+      {
+        id: 1,
+        name: "John Doe",
+        title: "Software Engineer",
+        location: "Remote",
+        salary: "$95,000",
+        skills: "JavaScript, React, Node.js",
+        match_score: 85,
+        match_reason: "Location match, Salary expectations align, 3 key skills match",
+      },
+      // Agrega más candidatos aquí
+    ];
 
-  //     const rankedResults = candidates.map((candidate) => {
-  //       let score = 0;
-  //       let matchReason: string[] = [];
+    const rankedResults = mockCandidates
+      .sort((a, b) => (b.match_score ?? 0) - (a.match_score ?? 0))
+      .slice(0, 3);
 
-  //       if (candidate.location?.toLowerCase().includes(job.location?.toLowerCase())) {
-  //         score += 30;
-  //         matchReason.push("Location match");
-  //       }
-
-  //       const jobSalary = parseInt(job.salary?.replace(/[^0-9]/g, "")) || 0;
-  //       const candidateSalary = parseInt(candidate.salary?.replace(/[^0-9]/g, "")) || 0;
-
-  //       if (Math.abs(jobSalary - candidateSalary) < 10000) {
-  //         score += 25;
-  //         matchReason.push("Salary expectations align");
-  //       }
-
-  //       const jobSkills = job.requirements?.join(" ").toLowerCase() || "";
-  //       const candidateSkills = candidate.skills?.toLowerCase() || "";
-
-  //       const skillsMatch = candidateSkills.split(",").filter((skill) => jobSkills.includes(skill.trim())).length;
-
-  //       if (skillsMatch > 0) {
-  //         score += Math.min(skillsMatch * 15, 45);
-  //         matchReason.push(`${skillsMatch} key skills match`);
-  //       }
-
-  //       return { ...candidate, match_score: score, match_reason: matchReason.join(", ") };
-  //     }).sort((a, b) => b.match_score - a.match_score).slice(0, 3);
-
-  //     setRankedCandidates(rankedResults);
-  //   } catch (error) {
-  //     console.error("Error fetching candidates:", error);
-  //   } finally {
-  //     setLoadingCandidates(false);
-  //   }
-  // };
+    setRankedCandidates(rankedResults);
+    setLoadingCandidates(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ff6b6b] to-[#ff8585]">
-      <div className="bg-[#ff6b6b] shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center justify-center h-16 gap-6">
-          <Link
-            href="/"
-            className="flex flex-col items-center text-white/80 hover:text-white"
-          >
-            <i className="fas fa-home text-2xl"></i>
-            <span className="text-sm mt-1">Home</span>
-          </Link>
-          <div className="flex flex-col items-center text-white/30 cursor-not-allowed">
-            <i className="fas fa-briefcase text-2xl"></i>
-            <span className="text-sm mt-1">Jobs</span>
-          </div>
-          <Link
-            href="/messenger"
-            className="flex flex-col items-center text-white/80 hover:text-white"
-          >
-            <i className="fas fa-comments text-2xl"></i>
-            <span className="text-sm mt-1">Messages</span>
-          </Link>
-          <Link
-            href="/schedule"
-            className="flex flex-col items-center text-white/80 hover:text-white"
-          >
-            <i className="fas fa-calendar text-2xl"></i>
-            <span className="text-sm mt-1">Calendar</span>
-          </Link>
-          <Link
-            href="/settings"
-            className="flex flex-col items-center text-white/80 hover:text-white"
-          >
-            <i className="fas fa-cog text-2xl"></i>
-            <span className="text-sm mt-1">Settings</span>
-          </Link>
-        </div>
-      </div>
+      <Header />
       <div className="px-8 pb-8 pt-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
@@ -275,12 +212,12 @@ function MainComponent() {
                     >
                       View / Edit
                     </button>
-                    <Link
-                      href="/top-rankedcandidates"
+                    <button
+                      onClick={() => handleViewCandidates(job)}
                       className="bg-[#ff858580] hover:bg-[#ff8585] text-white px-6 py-2 rounded-xl transition-all duration-300 text-center w-full"
                     >
                       Top Ranked Candidates
-                    </Link>
+                    </button>
                     <Link
                       href="/shortlist"
                       className="bg-[#22c55e] hover:bg-[#22c55e]/80 text-white px-6 py-2 rounded-xl transition-all duration-300 text-center w-full"
@@ -407,7 +344,7 @@ function MainComponent() {
                   Requirements (one per line)
                 </label>
                 <textarea
-                  value={editedJob.requirements.join("\n")}
+                  value={(editedJob.requirements as string[]).join("\n")}
                   onChange={(e) =>
                     setEditedJob({
                       ...editedJob,
@@ -423,7 +360,7 @@ function MainComponent() {
                   Responsibilities (one per line)
                 </label>
                 <textarea
-                  value={editedJob.responsibilities.join("\n")}
+                  value={(editedJob.responsibilities as string[]).join("\n")}
                   onChange={(e) =>
                     setEditedJob({
                       ...editedJob,
@@ -439,7 +376,7 @@ function MainComponent() {
                   Benefits (one per line)
                 </label>
                 <textarea
-                  value={editedJob.benefits.join("\n")}
+                  value={(editedJob.benefits as string[]).join("\n")}
                   onChange={(e) =>
                     setEditedJob({
                       ...editedJob,

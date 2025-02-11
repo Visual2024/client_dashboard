@@ -103,7 +103,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   // 🔹 Función para obtener trabajos (jobs)
   const fetchJobs = useCallback(async () => {
     try {
-      const response = await fetch("../../json/jobs.json", {
+      const response = await fetch("../json/jobs.json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: "", values: [] }),
@@ -163,7 +163,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       userName,
       isLoggedIn: !!authTokens,
     }),
-    [authTokens, login, logout, register, fetchJobs, handleDeleteJob]
+    [authTokens, login, logout, register, fetchJobs, handleDeleteJob, userName]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

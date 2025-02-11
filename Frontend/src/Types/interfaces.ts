@@ -30,10 +30,10 @@ export interface Job {
     salary: string;
     status: string;
     description: string;
-    requirements: string[];
-    responsibilities: string[];
-    benefits: string[];
-    posted_date: Date;
+    requirements: string[] ;
+    responsibilities: string[] ;
+    benefits: string[] ;
+    posted_date: Date | string;
 }
 
 export interface Candidate {
