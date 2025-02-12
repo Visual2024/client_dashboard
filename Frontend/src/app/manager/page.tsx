@@ -130,6 +130,7 @@ function MainComponent() {
     setLoadingCandidates(false);
   };
 
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ff6b6b] to-[#ff8585]">
       <Header />
